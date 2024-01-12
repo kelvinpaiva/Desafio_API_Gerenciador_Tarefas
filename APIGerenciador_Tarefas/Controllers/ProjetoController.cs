@@ -26,8 +26,19 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <summary>
         /// Cadastro de Projeto
         /// </summary>
+        /// <remarks>
+        /// Exemplo:
+        ///
+        ///     POST /Post
+        ///     {
+        ///        "Titulo do Projeto"
+        ///     }
+        ///
+        /// </remarks>
         /// <param name="Titulo">Titulo do Projeto</param>
-        /// <returns></returns>
+        /// <returns>Se o Projeto foi Cadastrado ou não.</returns>
+        /// <response code="200">Cadastrado com sucesso.</response>
+        /// <response code="500">Falha ao Cadastrar o Projeto.</response>   
         [HttpPost]
         public IActionResult Post([FromBody] string Titulo)
         {
@@ -36,23 +47,64 @@ namespace APIGerenciador_Tarefas.Controllers
                 _Projeto.Cadastro_Projeto(Titulo);
                 return Ok();
             }
-            catch (Exception ex)
+            catch 
             {
 
-                return StatusCode(500, new { message = ex.Message });
+                return StatusCode(500, new { message = "Falha ao Cadastrar o Projeto" });
             }
         }
 
-        // PUT api/<ProjetoController>/5
+        /// <summary>
+        /// Edita um Projeto Existente
+        /// </summary>
+        /// <remarks>
+        /// Exemplo:
+        ///
+        ///     POST /Put
+        ///     {
+        ///        "Descrição do Projeto"
+        ///     }
+        ///
+        /// </remarks>
+        /// <param name="id">Id do Projeto</param>
+        /// <param name="Titulo">Titulo do Projeto</param>
+        /// <returns>Se o Projeto foi Editado ou não.</returns>
+        /// <response code="200">Editado com sucesso.</response>
+        /// <response code="500">Falha ao Editar o Projeto.</response>   
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] string Titulo)
         {
+            try
+            {
+                _Projeto.Editar_Projeto(id,Titulo);
+                return Ok();
+            }
+            catch 
+            {
+                return StatusCode(500, new { message = "Falha ao Editar o Projeto" });
+            }
         }
 
-        // DELETE api/<ProjetoController>/5
+        /// <summary>
+        /// Exclui o Projeto com o ID informado
+        /// </summary>
+        /// <param name="id">Id do Projeto</param>
+        /// <returns>Se o Projeto foi excluído ou não.</returns>
+        /// <response code="200">Excluido com sucesso.</response>
+        /// <response code="300">Projeto tem Tarefas Pendentes.</response>
+        /// <response code="500">Falha ao excluir o Projeto.</response>   
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
+            try
+            {
+                _Projeto.Excluir_Projeto(id);
+                return Ok();
+            }
+            catch
+            {
+                return StatusCode(500, new { message = "Falha ao Excluir o Projeto" });
+            }
         }
     }
 }

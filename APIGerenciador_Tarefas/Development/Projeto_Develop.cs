@@ -40,5 +40,52 @@ namespace APIGerenciador_Tarefas.Development
                 return false;
             }
         }
+
+        /// <summary>
+        /// Edita um Projeto existente.
+        /// </summary>
+        /// <param name="id">Id do projeto</param>
+        /// <param name="titulo"> Titulo do Projeto</param>
+        /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
+        public bool Editar_Projeto(int id, string titulo)
+        {
+            try
+            {
+                using (var db = new wnbokcfxContext())
+                {
+                    var projeto = db.ProProjetos.Single(b => b.Id == id);
+                    projeto.ProTitulo = titulo;
+                    db.SaveChanges();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// Exclui Projeto com o ID informado.
+        /// </summary>
+        /// <param name="id">Id do Projeto</param>
+        /// <returns>True = Excluído com sucesso | False = Falha ao Excluir</returns>
+        public bool Excluir_Projeto(int id)
+        {
+            try
+            {
+                using (var db = new wnbokcfxContext())
+                {
+                    var projeto = db.ProProjetos.Where(b => b.Id == id);
+                    db.ProProjetos.Remove((ProProjeto)projeto);
+                    db.SaveChanges();
+                }
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 }
