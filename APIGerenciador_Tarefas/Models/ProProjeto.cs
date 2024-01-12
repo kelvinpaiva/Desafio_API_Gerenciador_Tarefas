@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace APIGerenciador_Tarefas
+namespace APIGerenciador_Tarefas.Models
 {
     public partial class ProProjeto
     {
@@ -10,8 +10,8 @@ namespace APIGerenciador_Tarefas
             LatLancamentoTarefas = new HashSet<LatLancamentoTarefa>();
         }
 
-        public long Id { get; set; }
         public string? ProTitulo { get; set; }
+        public int Id { get; set; }
 
         public virtual ICollection<LatLancamentoTarefa> LatLancamentoTarefas { get; set; }
     }
