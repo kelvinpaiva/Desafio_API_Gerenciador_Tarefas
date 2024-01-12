@@ -1,11 +1,5 @@
 ﻿using APIGerenciador_Tarefas.Interface;
 using APIGerenciador_Tarefas.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System.Configuration;
-using System.Net;
-using System.Text;
-using System.Xml;
 
 namespace APIGerenciador_Tarefas.Development
 {
@@ -53,7 +47,8 @@ namespace APIGerenciador_Tarefas.Development
             {
                 using (var db = new wnbokcfxContext())
                 {
-                    var projeto = db.ProProjetos.Single(b => b.Id == id);
+                    var projeto = db.ProProjetos.
+                        Single(b => b.Id == id);
                     projeto.ProTitulo = titulo;
                     db.SaveChanges();
                 }
@@ -85,6 +80,19 @@ namespace APIGerenciador_Tarefas.Development
             catch
             {
                 return false;
+            }
+        }
+
+        /// <summary>
+        /// Lista todos os Projetos Cadastrados
+        /// </summary>
+        /// <returns>Lista de Projetos Cadastrados</returns>
+        public List<ProProjeto> Listar_Projetos()
+        {
+            using (var db = new wnbokcfxContext())
+            {
+                var projeto = db.ProProjetos.ToList();
+                return projeto;
             }
         }
     }

@@ -1,41 +1,43 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIGerenciador_Tarefas.Interface;
 
+// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+
 namespace APIGerenciador_Tarefas.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProjetoController : ControllerBase
+    public class TarefaController : ControllerBase
     {
-        private readonly Interface_Projeto _Projeto;
+        private readonly Interface_Tarefa _Tarefa;
 
-        public ProjetoController(Interface_Projeto projeto)
+        public TarefaController(Interface_Tarefa Tarefa)
         {
-            _Projeto = projeto;
+            _Tarefa = Tarefa;
         }
 
         /// <summary>
-        /// Lista Todos os Projetos Cadastrados
+        /// Lista Todas as Tarefas Cadastradas
         /// </summary>
-        /// <returns>Lista de Projetos</returns>
+        /// <returns>Lista de Tarefas</returns>
         /// <response code="200">Lista de Objetos.</response>
-        /// <response code="500">Falha ao Listar os Projetos.</response> 
+        /// <response code="500">Falha ao Listar as Tarefa.</response> 
         [HttpGet]
         public IActionResult Lista()
         {
             try
             {
-                var lista = _Projeto.Listar_Projetos;
+                var lista = _Tarefa.Listar_Tarefas;
                 return Ok(lista);
             }
             catch
             {
-                return StatusCode(500, new { message = "Falha ao Cadastrar o Projeto" });
+                return StatusCode(500, new { message = "Falha ao Listar as Tarefas" });
             }
         }
 
         /// <summary>
-        /// Cadastro de Projeto
+        /// Cadastro de Tarefa
         /// </summary>
         /// <remarks>
         /// Exemplo:
@@ -46,26 +48,26 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="Titulo">Titulo do Projeto</param>
-        /// <returns>Se o Projeto foi Cadastrado ou não.</returns>
+        /// <param name="Titulo">Titulo da Tarefa</param>
+        /// <returns>Se a Tarefa foi Cadastrado ou não.</returns>
         /// <response code="200">Cadastrado com sucesso.</response>
-        /// <response code="500">Falha ao Cadastrar o Projeto.</response>   
+        /// <response code="500">Falha ao Cadastrar a Tarefa.</response>   
         [HttpPost]
         public IActionResult Post([FromBody] string Titulo)
         {
             try
             {
-                _Projeto.Cadastro_Projeto(Titulo);
+                _Tarefa.Cadastro_Tarefa(Titulo);
                 return Ok();
             }
-            catch 
+            catch
             {
-                return StatusCode(500, new { message = "Falha ao Cadastrar o Projeto" });
+                return StatusCode(500, new { message = "Falha ao Cadastrar a Tarefa" });
             }
         }
 
         /// <summary>
-        /// Edita um Projeto Existente
+        /// Edita uma Tarefa Existente
         /// </summary>
         /// <remarks>
         /// Exemplo:
@@ -76,39 +78,38 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="id">Id do Projeto</param>
-        /// <param name="Titulo">Titulo do Projeto</param>
-        /// <returns>Se o Projeto foi Editado ou não.</returns>
+        /// <param name="id">Id da Tarefa</param>
+        /// <param name="Titulo">Titulo do Tarefa</param>
+        /// <returns>Se o Tarefa foi Editado ou não.</returns>
         /// <response code="200">Editado com sucesso.</response>
-        /// <response code="500">Falha ao Editar o Projeto.</response>   
+        /// <response code="500">Falha ao Editar a Tarefa.</response>   
         [HttpPut("{id}")]
         public IActionResult Put(int id, [FromBody] string Titulo)
         {
             try
             {
-                _Projeto.Editar_Projeto(id,Titulo);
+                _Tarefa.Editar_Tarefa(id, Titulo);
                 return Ok();
             }
-            catch 
+            catch
             {
                 return StatusCode(500, new { message = "Falha ao Editar o Projeto" });
             }
         }
 
         /// <summary>
-        /// Exclui o Projeto com o ID informado
+        /// Exclui a Tarefa com o ID informado
         /// </summary>
-        /// <param name="id">Id do Projeto</param>
-        /// <returns>Se o Projeto foi excluído ou não.</returns>
+        /// <param name="id">Id da Tarefa</param>
+        /// <returns>Se a Tarefa foi excluída ou não.</returns>
         /// <response code="200">Excluido com sucesso.</response>
-        /// <response code="300">Projeto tem Tarefas Pendentes.</response>
-        /// <response code="500">Falha ao excluir o Projeto.</response>   
+        /// <response code="500">Falha ao excluir a Tarefa.</response>   
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
             try
             {
-                _Projeto.Excluir_Projeto(id);
+                _Tarefa.Excluir_Projeto(id);
                 return Ok();
             }
             catch
