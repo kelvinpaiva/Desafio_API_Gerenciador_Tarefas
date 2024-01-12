@@ -25,7 +25,6 @@
   <ItemGroup>
     <Folder Include="Interface\" />
     <Folder Include="Development\" />
-    <Folder Include="Dados\" />
     <Folder Include="Scripts\" />
   </ItemGroup>
 
