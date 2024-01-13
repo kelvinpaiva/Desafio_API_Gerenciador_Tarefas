@@ -7,12 +7,12 @@ namespace APIGerenciador_Tarefas.Models
     {
         public ProProjeto()
         {
-            LatLancamentoTarefas = new HashSet<LatLancamentoTarefa>();
+            Tarefas = new HashSet<TarTarefa>();
         }
 
         public string? ProTitulo { get; set; }
         public int Id { get; set; }
 
-        public virtual ICollection<LatLancamentoTarefa> LatLancamentoTarefas { get; set; }
+        public virtual ICollection<TarTarefa> Tarefas { get; set; }
     }
 }

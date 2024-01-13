@@ -25,7 +25,7 @@ namespace APIGerenciador_Tarefas.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("Host=motty.db.elephantsql.com;Database=wnbokcfx;Username=wnbokcfx;Password=Bwxfy0ehZH3sPNKYvW01vyslU4ZniZCd");
+                optionsBuilder.UseNpgsql("");
             }
         }
 
@@ -122,9 +122,9 @@ namespace APIGerenciador_Tarefas.Models
                     .HasMaxLength(100)
                     .HasColumnName("tar_titulo");
 
-                entity.HasOne(d => d.Projeto)
-                   .WithMany(p => p.projeto)
-                   .HasForeignKey(d => d.IdTar)
+                entity.HasOne(d => d.Id_Projeto)
+                   .WithMany(p => p.)
+                   .HasForeignKey(d => d.)
                    .HasConstraintName("tar_tarefa_fk");
             });
 

@@ -1,5 +1,7 @@
 using APIGerenciador_Tarefas.Development;
 using APIGerenciador_Tarefas.Interface;
+using APIGerenciador_Tarefas.Models;
+using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
-
+builder.Services.AddDbContext<wnbokcfxContext>(options =>
+options.UseNpgsql(builder.Configuration.GetConnectionString("ToDoManagerContext")));
 
 builder.Services.AddSwaggerGen(opt =>
 {  
