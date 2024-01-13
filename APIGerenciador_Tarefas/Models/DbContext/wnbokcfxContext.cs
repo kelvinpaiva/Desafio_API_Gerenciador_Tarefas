@@ -121,6 +121,11 @@ namespace APIGerenciador_Tarefas.Models
                 entity.Property(e => e.TarTitulo)
                     .HasMaxLength(100)
                     .HasColumnName("tar_titulo");
+
+                entity.HasOne(d => d.Projeto)
+                   .WithMany(p => p.projeto)
+                   .HasForeignKey(d => d.IdTar)
+                   .HasConstraintName("tar_tarefa_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);

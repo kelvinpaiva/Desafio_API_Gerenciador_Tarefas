@@ -38,5 +38,12 @@ namespace APIGerenciador_Tarefas.Interface
         /// </summary>
         /// <returns>Lista de Tarefas Cadastrados</returns>
         public List<TarTarefa> Listar_Tarefas();
+
+        /// <summary>
+        /// Valida se o Objeto da tarefa tem todos os campos preenchidos.
+        /// </summary>
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>True = Objeto válido, False = Objeto Inválido</returns>
+        public bool Valida_Tarefa(TarTarefa tarefa);
     }
 }

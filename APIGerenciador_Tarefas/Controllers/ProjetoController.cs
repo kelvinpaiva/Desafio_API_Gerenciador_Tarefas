@@ -99,12 +99,13 @@ namespace APIGerenciador_Tarefas.Controllers
         /// Exclui o Projeto com o ID informado
         /// </summary>
         /// <param name="id">Id do Projeto</param>
+        /// <param name="id_usuario">Id do Usuário</param>
         /// <returns>Se o Projeto foi excluído ou não.</returns>
         /// <response code="200">Excluido com sucesso.</response>
         /// <response code="300">Projeto tem Tarefas Pendentes.</response>
         /// <response code="500">Falha ao excluir o Projeto.</response>   
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, int id_usuario)
         {
             try
             {

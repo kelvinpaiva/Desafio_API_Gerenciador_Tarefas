@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIGerenciador_Tarefas.Interface;
+using APIGerenciador_Tarefas.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -48,17 +49,25 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="Titulo">Titulo da Tarefa</param>
+        /// <param name="tarefa">Objeto JSON da Tarefa</param>
         /// <returns>Se a Tarefa foi Cadastrado ou não.</returns>
         /// <response code="200">Cadastrado com sucesso.</response>
+        /// <response code="300">Dados inválidos, revise as informações.</response>
         /// <response code="500">Falha ao Cadastrar a Tarefa.</response>   
         [HttpPost]
-        public IActionResult Post([FromBody] string Titulo)
+        public IActionResult Post([FromBody] TarTarefa tarefa)
         {
             try
             {
-                _Tarefa.Cadastro_Tarefa(Titulo);
-                return Ok();
+                if (_Tarefa.Valida_Tarefa(tarefa).Equals(false))
+                {
+                    return StatusCode(300, new { message = "Dados inválidos, por favor, revise as informações." });
+                }
+                else
+                {
+                    _Tarefa.Cadastro_Tarefa(tarefa.TarTitulo,tarefa.TarDescricao, tarefa.TarPrioridade!, tarefa.TarDataValidade!, tarefa.TarStatus!);
+                    return Ok();
+                }              
             }
             catch
             {
@@ -78,18 +87,25 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="id">Id da Tarefa</param>
-        /// <param name="Titulo">Titulo do Tarefa</param>
+        /// <param name="tarefa">Objeto JSON da Tarefa</param>
         /// <returns>Se o Tarefa foi Editado ou não.</returns>
         /// <response code="200">Editado com sucesso.</response>
+        /// <response code="300">Dados inválidos, revise as informações.</response>
         /// <response code="500">Falha ao Editar a Tarefa.</response>   
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string Titulo)
+        public IActionResult Put([FromBody] TarTarefa tarefa)
         {
             try
             {
-                _Tarefa.Editar_Tarefa(id, Titulo);
-                return Ok();
+                if (_Tarefa.Valida_Tarefa(tarefa).Equals(false))
+                {
+                    return StatusCode(300, new { message = "Dados inválidos, por favor, revise as informações." });
+                }
+                else
+                {
+                    _Tarefa.Editar_Tarefa(tarefa.Id, tarefa.TarTitulo, tarefa.TarDescricao,  tarefa.TarDataValidade!, tarefa.TarStatus!);
+                    return Ok();
+                }
             }
             catch
             {
@@ -109,7 +125,7 @@ namespace APIGerenciador_Tarefas.Controllers
         {
             try
             {
-                _Tarefa.Excluir_Projeto(id);
+                _Tarefa.Excluir_Tarefa(id);
                 return Ok();
             }
             catch

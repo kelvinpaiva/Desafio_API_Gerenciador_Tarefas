@@ -42,24 +42,21 @@ namespace APIGerenciador_Tarefas.Development
         /// <summary>
         /// Edita um Tarefa existente.
         /// </summary>
-        /// <param name="id">Id do Tarefa</param>
-        /// <param name="Titulo">Título da Tarefa</param>
-        /// <param name="descricao">Descrição da Tarefa</param>
-        /// <param name="Validade">Validade da Tarefa</param>
-        /// <param name="status">Status da Tarefa</param>
+        /// <param name="tarefa"></param>
         /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Tarefa(int id, string Titulo, string descricao, DateOnly Validade, short status)
+        public bool Editar_Tarefa(TarTarefa tarefa)
         {
             try
             {
                 using (var db = new wnbokcfxContext())
                 {
-                    var Tarefa = db.TarTarefas.
-                        Single(b => b.Id == id);
-                    Tarefa.TarTitulo = Titulo;
-                    Tarefa.TarDescricao = descricao;
-                    Tarefa.TarDataValidade = Validade;
-                    Tarefa.TarStatus = status;
+                    var Tar = db.TarTarefas.
+                        Single(b => b.Id == tarefa.Id);
+                    Tar.TarTitulo = tarefa.TarTitulo;
+                    Tar.TarDescricao = tarefa.TarDescricao;
+                    Tar.TarDataValidade = tarefa.TarDataValidade;
+                    Tar.TarStatus = tarefa.TarStatus;
+                    Tar.
                     db.SaveChanges();
                 }
                 return true;
@@ -103,6 +100,22 @@ namespace APIGerenciador_Tarefas.Development
             {
                 var Tarefa = db.TarTarefas.ToList();
                 return Tarefa;
+            }
+        }
+        /// <summary>
+        /// Valida se o Objeto da tarefa tem todos os campos preenchidos.
+        /// </summary>
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>True = Objeto válido, False = Objeto Inválido</returns>
+        public bool Valida_Tarefa(TarTarefa tarefa)
+        {
+            if (!tarefa.TarTitulo!.Equals("") || tarefa.TarStatus!.Equals("") || tarefa.TarDataValidade!.Equals("") || tarefa.TarPrioridade!.Equals("") || tarefa.TarDescricao.Equals(""))
+            {
+                return false;
+            }
+            else
+            { 
+                return true; 
             }
         }
     }
