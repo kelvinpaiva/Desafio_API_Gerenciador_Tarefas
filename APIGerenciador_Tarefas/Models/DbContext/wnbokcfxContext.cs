@@ -17,6 +17,7 @@ namespace APIGerenciador_Tarefas.Models
         }
 
         public virtual DbSet<LctLancamentoComentarioTarefa> LctLancamentoComentarioTarefas { get; set; } = null!;
+        public virtual DbSet<LoaLogAplicacao> LoaLogAplicacaos { get; set; } = null!;
         public virtual DbSet<ProProjeto> ProProjetos { get; set; } = null!;
         public virtual DbSet<TarTarefa> TarTarefas { get; set; } = null!;
 
@@ -64,9 +65,26 @@ namespace APIGerenciador_Tarefas.Models
 
                 entity.Property(e => e.IdTar).HasColumnName("id_tar");
 
+                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
+
                 entity.Property(e => e.LctComentario)
                     .HasMaxLength(255)
                     .HasColumnName("lct_comentario");
+            });
+
+            modelBuilder.Entity<LoaLogAplicacao>(entity =>
+            {
+                entity.ToTable("loa_log_aplicacao");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdRegistro).HasColumnName("id_registro");
+
+                entity.Property(e => e.LoaDescricaoLog).HasColumnName("loa_descricao_log");
+
+                entity.Property(e => e.LoaTipoLog)
+                    .HasColumnName("loa_tipo_log")
+                    .HasComment("1 - Projeto, 2 - Tarefa, 3 - Comentario");
             });
 
             modelBuilder.Entity<ProProjeto>(entity =>
@@ -74,6 +92,8 @@ namespace APIGerenciador_Tarefas.Models
                 entity.ToTable("pro_projeto");
 
                 entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
 
                 entity.Property(e => e.ProTitulo)
                     .HasMaxLength(255)
@@ -87,6 +107,8 @@ namespace APIGerenciador_Tarefas.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdPro).HasColumnName("id_pro");
+
+                entity.Property(e => e.IdUsuario).HasColumnName("id_usuario");
 
                 entity.Property(e => e.TarDataValidade).HasColumnName("tar_data_validade");
 
@@ -105,6 +127,7 @@ namespace APIGerenciador_Tarefas.Models
                 entity.HasOne(d => d.IdProNavigation)
                     .WithMany(p => p.TarTarefas)
                     .HasForeignKey(d => d.IdPro)
+                    .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("tar_tarefa_fk");
             });
 
