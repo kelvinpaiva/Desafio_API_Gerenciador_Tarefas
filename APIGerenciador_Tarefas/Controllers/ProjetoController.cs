@@ -109,7 +109,8 @@ namespace APIGerenciador_Tarefas.Controllers
         {
             try
             {
-                _Projeto.Excluir_Projeto(id);
+                int retorno = _Projeto.Excluir_Projeto(id);
+                if(retorno.Equals(3)) return StatusCode(300, new { message = "Não é possível excluir Projeto com Tarefas Pendentes!" });
                 return Ok();
             }
             catch

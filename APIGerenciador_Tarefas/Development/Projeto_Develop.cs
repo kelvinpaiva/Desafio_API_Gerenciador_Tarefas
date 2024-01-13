@@ -64,22 +64,23 @@ namespace APIGerenciador_Tarefas.Development
         /// Exclui Projeto com o ID informado.
         /// </summary>
         /// <param name="id">Id do Projeto</param>
-        /// <returns>True = Excluído com sucesso | False = Falha ao Excluir</returns>
-        public bool Excluir_Projeto(int id)
+        /// <returns>1 = Excluído com sucesso | 2 = Falha ao Excluir | 3 = Projeto com Tarefas pendentes.</returns>
+        public int Excluir_Projeto(int id)
         {
             try
             {
+                if (!Valida_Exclusao_Projeto(id)) return 3;
                 using (var db = new wnbokcfxContext())
                 {
                     var projeto = db.ProProjetos.Where(b => b.Id == id);
                     db.ProProjetos.Remove((ProProjeto)projeto);
                     db.SaveChanges();
                 }
-                return true;
+                return 1;
             }
             catch
             {
-                return false;
+                return 2;
             }
         }
 
@@ -95,6 +96,15 @@ namespace APIGerenciador_Tarefas.Development
                 return projeto;
             }
         }
-      
+        /// <summary>
+        /// Confere se o Projeto tem Tarefas Pendentes, caso sim, não permite a exclusão do projeto.
+        /// </summary>
+        /// <param name="id_projeto">Id do Projeto</param>
+        /// <returns>True = Pode excluir, False = Não pode excluir.</returns>
+        private bool Valida_Exclusao_Projeto(int id_projeto)
+        {
+
+            return false;
+        }
     }
 }

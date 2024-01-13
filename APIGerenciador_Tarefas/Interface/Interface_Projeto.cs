@@ -23,8 +23,8 @@ namespace APIGerenciador_Tarefas.Interface
         /// Exclui Projeto com o ID informado.
         /// </summary>
         /// <param name="id">Id do Projeto</param>
-        /// <returns>True = Excluído com sucesso | False = Falha ao Excluir</returns>
-        public bool Excluir_Projeto(int id);
+        /// <returns>1 = Excluído com sucesso | 2 = Falha ao Excluir | 3 = Projeto com Tarefas pendentes.</returns>
+        public int Excluir_Projeto(int id)
         /// <summary>
         /// Lista todos os Projetos Cadastrados
         /// </summary>
