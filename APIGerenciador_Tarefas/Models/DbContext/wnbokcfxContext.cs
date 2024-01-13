@@ -16,7 +16,6 @@ namespace APIGerenciador_Tarefas.Models
         {
         }
 
-        public virtual DbSet<LatLancamentoTarefa> LatLancamentoTarefas { get; set; } = null!;
         public virtual DbSet<LctLancamentoComentarioTarefa> LctLancamentoComentarioTarefas { get; set; } = null!;
         public virtual DbSet<ProProjeto> ProProjetos { get; set; } = null!;
         public virtual DbSet<TarTarefa> TarTarefas { get; set; } = null!;
@@ -25,7 +24,7 @@ namespace APIGerenciador_Tarefas.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseNpgsql("");
+                optionsBuilder.UseNpgsql("Host=motty.db.elephantsql.com;Database=wnbokcfx;Username=wnbokcfx;Password=Bwxfy0ehZH3sPNKYvW01vyslU4ZniZCd");
             }
         }
 
@@ -52,27 +51,6 @@ namespace APIGerenciador_Tarefas.Models
                 .HasPostgresExtension("unaccent")
                 .HasPostgresExtension("uuid-ossp")
                 .HasPostgresExtension("xml2");
-
-            modelBuilder.Entity<LatLancamentoTarefa>(entity =>
-            {
-                entity.ToTable("lat_lancamento_tarefa");
-
-                entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.IdPro).HasColumnName("id_pro");
-
-                entity.Property(e => e.IdTar).HasColumnName("id_tar");
-
-                entity.HasOne(d => d.IdProNavigation)
-                    .WithMany(p => p.LatLancamentoTarefas)
-                    .HasForeignKey(d => d.IdPro)
-                    .HasConstraintName("lat_lancamento_tarefa_fk");
-
-                entity.HasOne(d => d.IdTarNavigation)
-                    .WithMany(p => p.LatLancamentoTarefas)
-                    .HasForeignKey(d => d.IdTar)
-                    .HasConstraintName("lat_lancamento_tarefa_fk_1");
-            });
 
             modelBuilder.Entity<LctLancamentoComentarioTarefa>(entity =>
             {
@@ -108,6 +86,8 @@ namespace APIGerenciador_Tarefas.Models
 
                 entity.Property(e => e.Id).HasColumnName("id");
 
+                entity.Property(e => e.IdPro).HasColumnName("id_pro");
+
                 entity.Property(e => e.TarDataValidade).HasColumnName("tar_data_validade");
 
                 entity.Property(e => e.TarDescricao)
@@ -122,10 +102,10 @@ namespace APIGerenciador_Tarefas.Models
                     .HasMaxLength(100)
                     .HasColumnName("tar_titulo");
 
-                entity.HasOne(d => d.Id_Projeto)
-                   .WithMany(p => p.)
-                   .HasForeignKey(d => d.)
-                   .HasConstraintName("tar_tarefa_fk");
+                entity.HasOne(d => d.IdProNavigation)
+                    .WithMany(p => p.TarTarefas)
+                    .HasForeignKey(d => d.IdPro)
+                    .HasConstraintName("tar_tarefa_fk");
             });
 
             OnModelCreatingPartial(modelBuilder);

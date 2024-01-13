@@ -16,38 +16,37 @@ namespace APIGerenciador_Tarefas.Development
         /// <summary>
         /// Função para Cadastro de uma Nova Tarefa
         /// </summary>
-        /// <param name="Titulo">Título da Tarefa</param>
-        /// <param name="descricao">Descrição da Tarefa</param>
-        /// <param name="prioridade">Prioridade da Tarefa</param>
-        /// <param name="Validade">Validade da Tarefa</param>
-        /// <param name="status">Status da Tarefa</param>
-        /// <returns>True = Cadastrado com sucesso | False = Falha ao cadastrar</returns>
-        public bool Cadastro_Tarefa(string Titulo, string descricao, short prioridade, DateOnly Validade, short status)
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>1 = Cadastrado com sucesso | 2 = Falha na Validação | 3 = Falha ao cadastrar | 4 = Limite de tarefas por Processo atingido. </returns>
+        public int Cadastro_Tarefa(TarTarefa tarefa)
         {
             try
             {
+                if(!Valida_Tarefa(tarefa))  return 2;
+                if (!Pode_Adicionar_Tarefas((int)tarefa.IdPro!)) return 4;
                 using (var db = new wnbokcfxContext())
                 {
-                    db.TarTarefas.Add(new TarTarefa { TarTitulo = Titulo ,TarDescricao = descricao, TarPrioridade = prioridade, TarDataValidade = Validade, TarStatus = status});
-                    db.SaveChanges();
+                   db.TarTarefas.Add(tarefa);
+                   db.SaveChanges();
                 }
-                return true;
+                return 1;
             }
             catch
             {
-                return false;
+                return 3;
             }
         }
 
         /// <summary>
         /// Edita um Tarefa existente.
         /// </summary>
-        /// <param name="tarefa"></param>
-        /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Tarefa(TarTarefa tarefa)
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>True = Editado com sucesso | 2 = Falha na Validação | False = Falha ao Editar</returns>
+        public int Editar_Tarefa(TarTarefa tarefa)
         {
             try
             {
+                if (!Valida_Tarefa(tarefa)) return 2;
                 using (var db = new wnbokcfxContext())
                 {
                     var Tar = db.TarTarefas.
@@ -56,14 +55,13 @@ namespace APIGerenciador_Tarefas.Development
                     Tar.TarDescricao = tarefa.TarDescricao;
                     Tar.TarDataValidade = tarefa.TarDataValidade;
                     Tar.TarStatus = tarefa.TarStatus;
-                    Tar.
                     db.SaveChanges();
                 }
-                return true;
+                return 1;
             }
             catch
             {
-                return false;
+                return 3;
             }
         }
 
@@ -107,15 +105,35 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="tarefa">Objeto da Tarefa</param>
         /// <returns>True = Objeto válido, False = Objeto Inválido</returns>
-        public bool Valida_Tarefa(TarTarefa tarefa)
+        private bool Valida_Tarefa(TarTarefa tarefa)
         {
-            if (!tarefa.TarTitulo!.Equals("") || tarefa.TarStatus!.Equals("") || tarefa.TarDataValidade!.Equals("") || tarefa.TarPrioridade!.Equals("") || tarefa.TarDescricao.Equals(""))
+            if (tarefa.TarTitulo!.Equals("") || tarefa.TarStatus!.Equals("") || tarefa.TarDataValidade!.Equals("") || tarefa.TarPrioridade!.Equals("") || tarefa.TarDescricao.Equals(""))
             {
                 return false;
             }
             else
             { 
                 return true; 
+            }
+        }
+        /// <summary>
+        /// Retorna se o projeto pode adicionar mais tarefas.
+        /// </summary>
+        /// <param name="id_projeto">Id do projeto</param>
+        /// <returns>True = Pode adicionar, False = Não pode adicionar</returns>
+        private bool Pode_Adicionar_Tarefas(int id_projeto)
+        {
+            using (var db = new wnbokcfxContext())
+            {
+                var projeto = db.ProProjetos.ToList();
+                if (projeto.Count().Equals(20))
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
             }
         }
     }

@@ -7,24 +7,16 @@ namespace APIGerenciador_Tarefas.Interface
         /// <summary>
         /// Função para Cadastro de uma Nova Tarefa
         /// </summary>
-        /// <param name="Titulo">Título da Tarefa</param>
-        /// <param name="descricao">Descrição da Tarefa</param>
-        /// <param name="prioridade">Prioridade da Tarefa</param>
-        /// <param name="Validade">Validade da Tarefa</param>
-        /// <param name="status">Status da Tarefa</param>
-        /// <returns>True = Cadastrado com sucesso | False = Falha ao cadastrar</returns>
-        public bool Cadastro_Tarefa(string Titulo, string descricao, short prioridade, DateOnly Validade, short status);
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>1 = Cadastrado com sucesso | 2 = Falha na Validação | 3 = Falha ao cadastrar | 4 = Limite de tarefas por Processo atingido. </returns>
+        public int Cadastro_Tarefa(TarTarefa tarefa);
 
         /// <summary>
         /// Edita um Tarefa existente.
         /// </summary>
-        /// <param name="id">Id do Tarefa</param>
-        /// <param name="Titulo">Título da Tarefa</param>
-        /// <param name="descricao">Descrição da Tarefa</param>
-        /// <param name="Validade">Validade da Tarefa</param>
-        /// <param name="status">Status da Tarefa</param>
-        /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Tarefa(int id, string Titulo, string descricao, DateOnly Validade, short status);
+        /// <param name="tarefa">Objeto da Tarefa</param>
+        /// <returns>True = Editado com sucesso | 2 = Falha na Validação | False = Falha ao Editar</returns>
+        public int Editar_Tarefa(TarTarefa tarefa);
 
         /// <summary>
         /// Exclui Tarefa com o ID informado.
@@ -38,12 +30,5 @@ namespace APIGerenciador_Tarefas.Interface
         /// </summary>
         /// <returns>Lista de Tarefas Cadastrados</returns>
         public List<TarTarefa> Listar_Tarefas();
-
-        /// <summary>
-        /// Valida se o Objeto da tarefa tem todos os campos preenchidos.
-        /// </summary>
-        /// <param name="tarefa">Objeto da Tarefa</param>
-        /// <returns>True = Objeto válido, False = Objeto Inválido</returns>
-        public bool Valida_Tarefa(TarTarefa tarefa);
     }
 }

@@ -53,21 +53,17 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <returns>Se a Tarefa foi Cadastrado ou não.</returns>
         /// <response code="200">Cadastrado com sucesso.</response>
         /// <response code="300">Dados inválidos, revise as informações.</response>
+        /// <response code="400">Projeto com limite de tarefas.</response>
         /// <response code="500">Falha ao Cadastrar a Tarefa.</response>   
         [HttpPost]
         public IActionResult Post([FromBody] TarTarefa tarefa)
         {
             try
             {
-                if (_Tarefa.Valida_Tarefa(tarefa).Equals(false))
-                {
-                    return StatusCode(300, new { message = "Dados inválidos, por favor, revise as informações." });
-                }
-                else
-                {
-                    _Tarefa.Cadastro_Tarefa(tarefa.TarTitulo,tarefa.TarDescricao, tarefa.TarPrioridade!, tarefa.TarDataValidade!, tarefa.TarStatus!);
-                    return Ok();
-                }              
+                int retorno = _Tarefa.Cadastro_Tarefa(tarefa);
+                if (retorno.Equals(2)) return StatusCode(300, new { message = "Dados inválidos, revise as informações." });
+                if (retorno.Equals(4)) return StatusCode(400, new { message = "Limite de Tarefas por projeto atingido." });
+                return Ok();   
             }
             catch
             {
@@ -97,15 +93,9 @@ namespace APIGerenciador_Tarefas.Controllers
         {
             try
             {
-                if (_Tarefa.Valida_Tarefa(tarefa).Equals(false))
-                {
-                    return StatusCode(300, new { message = "Dados inválidos, por favor, revise as informações." });
-                }
-                else
-                {
-                    _Tarefa.Editar_Tarefa(tarefa.Id, tarefa.TarTitulo, tarefa.TarDescricao,  tarefa.TarDataValidade!, tarefa.TarStatus!);
-                    return Ok();
-                }
+                int retorno = _Tarefa.Editar_Tarefa(tarefa);
+                if (retorno.Equals(2)) return StatusCode(300, new { message = "Dados inválidos, revise as informações." });
+                return Ok();
             }
             catch
             {
