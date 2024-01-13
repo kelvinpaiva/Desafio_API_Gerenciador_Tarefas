@@ -12,5 +12,6 @@ namespace APIGerenciador_Tarefas.Models
         /// 1 - Projeto, 2 - Tarefa, 3 - Comentario
         /// </summary>
         public short LoaTipoLog { get; set; }
+        public int IdUsuario { get; set; }
     }
 }
