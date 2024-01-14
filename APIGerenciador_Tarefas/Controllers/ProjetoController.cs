@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIGerenciador_Tarefas.Interface;
 using APIGerenciador_Tarefas.Models;
+using APIGerenciador_Tarefas.Models.DAO;
 
 namespace APIGerenciador_Tarefas.Controllers
 {
@@ -52,7 +53,7 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <response code="200">Cadastrado com sucesso.</response>
         /// <response code="500">Falha ao Cadastrar o Projeto.</response>   
         [HttpPost]
-        public IActionResult Post([FromBody] ProProjeto Projeto)
+        public IActionResult Post([FromBody] ProProjeto_DAO Projeto)
         {
             try
             {
@@ -83,7 +84,7 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <response code="200">Editado com sucesso.</response>
         /// <response code="500">Falha ao Editar o Projeto.</response>   
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] ProProjeto Projeto)
+        public IActionResult Put(int id, [FromBody] ProProjeto_DAO Projeto)
         {
             try
             {
@@ -111,7 +112,7 @@ namespace APIGerenciador_Tarefas.Controllers
         {
             try
             {
-                int retorno = _Projeto.Excluir_Projeto(id);
+                int retorno = _Projeto.Excluir_Projeto(id_usuario,id);
                 if(retorno.Equals(3)) return StatusCode(300, new { message = "Não é possível excluir Projeto com Tarefas Pendentes!" });
                 return Ok();
             }

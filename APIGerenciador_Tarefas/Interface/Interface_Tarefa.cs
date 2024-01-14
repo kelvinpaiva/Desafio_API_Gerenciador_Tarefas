@@ -30,5 +30,10 @@ namespace APIGerenciador_Tarefas.Interface
         /// </summary>
         /// <returns>Lista de Tarefas Cadastrados</returns>
         public List<TarTarefa> Listar_Tarefas();
+        /// <summary>
+        /// Função que retorna a quantidade de tarefas realizadas nos últimos 30 dias.
+        /// </summary>
+        /// <returns>Retorna a quantidade de tarefas. Se der erro retorna -1;</returns>
+        public Object Quantidade_Tarefas_Mensal();
     }
 }

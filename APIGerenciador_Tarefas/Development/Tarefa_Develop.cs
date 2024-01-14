@@ -1,5 +1,6 @@
 ﻿using APIGerenciador_Tarefas.Models;
 using APIGerenciador_Tarefas.Interface;
+using APIGerenciador_Tarefas.Models.DAO;
 
 namespace APIGerenciador_Tarefas.Development
 {
@@ -140,6 +141,26 @@ namespace APIGerenciador_Tarefas.Development
                 {
                     return true;
                 }
+            }
+        }
+        /// <summary>
+        /// Função que retorna a quantidade de tarefas realizadas nos últimos 30 dias.
+        /// </summary>
+        /// <returns>Retorna a quantidade de tarefas. Se der erro retorna -1;</returns>
+        public Object Quantidade_Tarefas_Mensal()
+        {
+            try
+            {
+                using (var db = new wnbokcfxContext())
+                {
+                    var teste = db.TarTarefas.Where(t => t.TarDataValidade >= DateOnly.FromDateTime(DateTime.Now.AddDays(-30))).OrderBy(t => t.IdProNavigation.ProTitulo).OrderBy(t => t.TarDataValidade).Count();
+                    List<Relacao_Usuario_Tarefas_Realizadas_DAO> relacao_Usuario_Tarefas = new List<Relacao_Usuario_Tarefas_Realizadas_DAO>();
+                    return relacao_Usuario_Tarefas;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex;
             }
         }
     }

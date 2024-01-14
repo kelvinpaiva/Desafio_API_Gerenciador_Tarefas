@@ -123,5 +123,17 @@ namespace APIGerenciador_Tarefas.Controllers
                 return StatusCode(500, new { message = "Falha ao Excluir o Projeto" });
             }
         }
+
+        /// <summary>
+        /// Quantidade de tarefas realizadas nos últimos 30 dias
+        /// Tipo Usuário: 0 - Comum, 1 - Gerente;
+        /// </summary>
+        /// <returns>Retorna a quantidade de tarefas realizadas nos últimos 30 dias.</returns>
+        [HttpGet("{tipo_usuario}")]
+        public IActionResult Quantidade_Tarefas_Realizadas(int tipo_usuario)
+        {
+
+            return Ok();
+        }
     }
 }

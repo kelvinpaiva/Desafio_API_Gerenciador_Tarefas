@@ -1,5 +1,6 @@
 ﻿using APIGerenciador_Tarefas.Interface;
 using APIGerenciador_Tarefas.Models;
+using APIGerenciador_Tarefas.Models.DAO;
 
 namespace APIGerenciador_Tarefas.Development
 {
@@ -14,14 +15,14 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="projeto">Objeto do Projeto</param>
         /// <returns>True = Cadastrado com sucesso | False = Falha ao cadastrar</returns>
-        public bool Cadastro_Projeto(ProProjeto projeto)
+        public bool Cadastro_Projeto(ProProjeto_DAO projeto)
         {
             try
             {
                 Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
-                    db.ProProjetos.Add(projeto);
+                    db.ProProjetos.Add(new ProProjeto { IdUsuario = projeto.IdUsuario, ProTitulo = projeto.ProTitulo});
                     db.SaveChanges();
                 }
                 log.Grava_Log_Aplicacao(projeto, 1);
@@ -38,7 +39,7 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="projeto">Objeto do projeto</param>
         /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Projeto(ProProjeto projeto)
+        public bool Editar_Projeto(ProProjeto_DAO projeto)
         {
             try
             {
@@ -47,7 +48,8 @@ namespace APIGerenciador_Tarefas.Development
                 {
                     var proj = db.ProProjetos.
                         Single(b => b.Id == projeto.Id);
-                    proj = projeto;
+                    proj.ProTitulo = projeto.ProTitulo;
+                    
                     db.SaveChanges();
                 }
                 log.Grava_Log_Aplicacao(projeto, 2);
@@ -62,21 +64,23 @@ namespace APIGerenciador_Tarefas.Development
         /// <summary>
         /// Exclui Projeto com o ID informado.
         /// </summary>
-        /// <param name="projeto">Objeto do Projeto</param>
+        /// <param name="Id_usuario">ID do Usuário que está excluindo</param>
+        /// <param name="id_projeto">Id do Projeto a ser excluido</param>
         /// <returns>1 = Excluído com sucesso | 2 = Falha ao Excluir | 3 = Projeto com Tarefas pendentes.</returns>
-        public int Excluir_Projeto(ProProjeto projeto)
+        public int Excluir_Projeto(int Id_usuario, int id_projeto)
         {
             try
             {
                 Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
-                if (!Valida_Exclusao_Projeto(projeto.Id)) return 3;
+                if (!Valida_Exclusao_Projeto(id_projeto)) return 3;
                 using (var db = new wnbokcfxContext())
                 {
-                    ProProjeto pro = (ProProjeto)db.ProProjetos.Where(b => b.Id == projeto.Id);
-                    db.ProProjetos.Remove(pro);
+                    var proj = db.ProProjetos.
+                        Single(b => b.Id == id_projeto);
+                    db.ProProjetos.Remove(proj);
                     db.SaveChanges();
+                    log.Grava_Log_Aplicacao(proj, 3);
                 }
-                log.Grava_Log_Aplicacao(projeto, 3);
                 return 1;
             }
             catch
