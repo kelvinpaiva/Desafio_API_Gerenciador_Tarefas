@@ -10,7 +10,7 @@ namespace APIGerenciador_Tarefas.Development
         /// <param name="objeto"> Objeto do Projeto.</param>
         /// <param name="Evento">1 - Cadastro, 2 - Alteração, 3 - Exclusão. </param>
         /// <returns>True = Gravado com sucesso, False = Falha na gravação. </returns>
-        protected bool Grava_Log_Aplicacao(Object objeto, int Evento)
+        public bool Grava_Log_Aplicacao(Object objeto, int Evento)
         {
             string log = "";
             try
@@ -45,6 +45,22 @@ namespace APIGerenciador_Tarefas.Development
                     else
                     {
                         log += "Exclusão do Tarefa de Id: " + tarefa.Id + " e Título:" + tarefa.TarTitulo;
+                    }
+                }
+                else if (objeto is LctLancamentoComentarioTarefa)
+                {
+                    LctLancamentoComentarioTarefa comentario = (LctLancamentoComentarioTarefa)objeto;
+                    if (Evento.Equals(1))
+                    {
+                        log += "Cadastro de Comentário: Usuário: "+ comentario.IdUsuario +" Título: " + comentario.LctComentario +" Id da Tarefa: "+ comentario.IdTar+".";
+                    }
+                    else if (Evento.Equals(2))
+                    {
+                        log += "Alteração do Comentário de Id: " + comentario.Id + " Usuário: " + comentario.IdUsuario + " Título: " + comentario.LctComentario + " Id da Tarefa: " + comentario.IdTar + ".";
+                    }
+                    else
+                    {
+                        log += "Exclusão do Comentário de Id: " + comentario.Id + " Usuário: " + comentario.IdUsuario + " Título: " + comentario.LctComentario + " Id da Tarefa: " + comentario.IdTar + ".";
                     }
                 }
                 return true;

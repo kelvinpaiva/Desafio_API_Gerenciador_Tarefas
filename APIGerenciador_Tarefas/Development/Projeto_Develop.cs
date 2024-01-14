@@ -5,28 +5,26 @@ namespace APIGerenciador_Tarefas.Development
 {
     public class Projeto_Develop : Interface_Projeto
     {
-        private readonly IConfiguration configuration;
-
-
-        public Projeto_Develop(IConfiguration _configuration )
+        public Projeto_Develop()
         {
-            configuration = _configuration;
         }
-        
+
         /// <summary>
         /// Função para Cadastro de um Novo Projeto
         /// </summary>
-        /// <param name="Titulo">Título do Projeto</param>
+        /// <param name="projeto">Objeto do Projeto</param>
         /// <returns>True = Cadastrado com sucesso | False = Falha ao cadastrar</returns>
-        public bool Cadastro_Projeto(string Titulo)
+        public bool Cadastro_Projeto(ProProjeto projeto)
         {
             try
             {
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
-                    db.ProProjetos.Add(new ProProjeto { ProTitulo = Titulo });
+                    db.ProProjetos.Add(projeto);
                     db.SaveChanges();
                 }
+                log.Grava_Log_Aplicacao(projeto, 1);
                 return true;
             }
             catch
@@ -38,20 +36,21 @@ namespace APIGerenciador_Tarefas.Development
         /// <summary>
         /// Edita um Projeto existente.
         /// </summary>
-        /// <param name="id">Id do projeto</param>
-        /// <param name="titulo"> Titulo do Projeto</param>
+        /// <param name="projeto">Objeto do projeto</param>
         /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Projeto(int id, string titulo)
+        public bool Editar_Projeto(ProProjeto projeto)
         {
             try
             {
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
-                    var projeto = db.ProProjetos.
-                        Single(b => b.Id == id);
-                    projeto.ProTitulo = titulo;
+                    var proj = db.ProProjetos.
+                        Single(b => b.Id == projeto.Id);
+                    proj = projeto;
                     db.SaveChanges();
                 }
+                log.Grava_Log_Aplicacao(projeto, 2);
                 return true;
             }
             catch
@@ -63,19 +62,21 @@ namespace APIGerenciador_Tarefas.Development
         /// <summary>
         /// Exclui Projeto com o ID informado.
         /// </summary>
-        /// <param name="id">Id do Projeto</param>
+        /// <param name="projeto">Objeto do Projeto</param>
         /// <returns>1 = Excluído com sucesso | 2 = Falha ao Excluir | 3 = Projeto com Tarefas pendentes.</returns>
-        public int Excluir_Projeto(int id)
+        public int Excluir_Projeto(ProProjeto projeto)
         {
             try
             {
-                if (!Valida_Exclusao_Projeto(id)) return 3;
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
+                if (!Valida_Exclusao_Projeto(projeto.Id)) return 3;
                 using (var db = new wnbokcfxContext())
                 {
-                    var projeto = db.ProProjetos.Where(b => b.Id == id);
-                    db.ProProjetos.Remove((ProProjeto)projeto);
+                    ProProjeto pro = (ProProjeto)db.ProProjetos.Where(b => b.Id == projeto.Id);
+                    db.ProProjetos.Remove(pro);
                     db.SaveChanges();
                 }
+                log.Grava_Log_Aplicacao(projeto, 3);
                 return 1;
             }
             catch
@@ -103,8 +104,12 @@ namespace APIGerenciador_Tarefas.Development
         /// <returns>True = Pode excluir, False = Não pode excluir.</returns>
         private bool Valida_Exclusao_Projeto(int id_projeto)
         {
-
-            return false;
+            using (var db = new wnbokcfxContext())
+            {
+                List<TarTarefa> tarefas = db.TarTarefas.Where(d => d.IdPro.Equals(id_projeto)).ToList();
+                if (tarefas.Count().Equals(20)) return false;
+            }
+            return true;
         }
     }
 }

@@ -22,13 +22,15 @@ namespace APIGerenciador_Tarefas.Development
         {
             try
             {
-                if(!Valida_Tarefa(tarefa))  return 2;
+                if (!Valida_Tarefa(tarefa))  return 2;
                 if (!Pode_Adicionar_Tarefas((int)tarefa.IdPro!)) return 4;
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
                    db.TarTarefas.Add(tarefa);
                    db.SaveChanges();
                 }
+                log.Grava_Log_Aplicacao(tarefa, 1);
                 return 1;
             }
             catch
@@ -47,6 +49,7 @@ namespace APIGerenciador_Tarefas.Development
             try
             {
                 if (!Valida_Tarefa(tarefa)) return 2;
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
                     var Tar = db.TarTarefas.
@@ -57,6 +60,7 @@ namespace APIGerenciador_Tarefas.Development
                     Tar.TarStatus = tarefa.TarStatus;
                     db.SaveChanges();
                 }
+                log.Grava_Log_Aplicacao(tarefa, 2);
                 return 1;
             }
             catch
@@ -74,11 +78,13 @@ namespace APIGerenciador_Tarefas.Development
         {
             try
             {
+                Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
                     var Tarefa = db.TarTarefas.Where(b => b.Id == id);
                     db.TarTarefas.Remove((TarTarefa)Tarefa);
                     db.SaveChanges();
+                    log.Grava_Log_Aplicacao(Tarefa, 3);
                 }
                 return true;
             }

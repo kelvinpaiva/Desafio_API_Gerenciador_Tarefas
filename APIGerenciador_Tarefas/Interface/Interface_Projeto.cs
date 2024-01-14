@@ -5,26 +5,25 @@ namespace APIGerenciador_Tarefas.Interface
     public interface Interface_Projeto
     {
         /// <summary>
-        /// Interface do Cadastro de Projeto
+        /// Função para Cadastro de um Novo Projeto
         /// </summary>
-        /// <param name="Titulo">Título do Projeto</param>
+        /// <param name="projeto">Objeto do Projeto</param>
         /// <returns>True = Cadastrado com sucesso | False = Falha ao cadastrar</returns>
-        public bool Cadastro_Projeto(string Titulo);
+        public bool Cadastro_Projeto(ProProjeto projeto);
 
         /// <summary>
         /// Edita um Projeto existente.
         /// </summary>
-        /// <param name="id">Id do projeto</param>
-        /// <param name="titulo"> Titulo do Projeto</param>
+        /// <param name="projeto">Objeto do projeto</param>
         /// <returns>True = Editado com sucesso | False = Falha ao Editar</returns>
-        public bool Editar_Projeto(int id, string titulo);
+        public bool Editar_Projeto(ProProjeto projeto);
 
         /// <summary>
         /// Exclui Projeto com o ID informado.
         /// </summary>
-        /// <param name="id">Id do Projeto</param>
+        /// <param name="projeto">Objeto do Projeto</param>
         /// <returns>1 = Excluído com sucesso | 2 = Falha ao Excluir | 3 = Projeto com Tarefas pendentes.</returns>
-        public int Excluir_Projeto(int id);
+        public int Excluir_Projeto(ProProjeto projeto);
         /// <summary>
         /// Lista todos os Projetos Cadastrados
         /// </summary>

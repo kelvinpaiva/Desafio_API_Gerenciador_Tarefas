@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIGerenciador_Tarefas.Interface;
+using APIGerenciador_Tarefas.Models;
 
 namespace APIGerenciador_Tarefas.Controllers
 {
@@ -46,16 +47,16 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="Titulo">Titulo do Projeto</param>
+        /// <param name="Projeto">Objeto do Projeto</param>
         /// <returns>Se o Projeto foi Cadastrado ou não.</returns>
         /// <response code="200">Cadastrado com sucesso.</response>
         /// <response code="500">Falha ao Cadastrar o Projeto.</response>   
         [HttpPost]
-        public IActionResult Post([FromBody] string Titulo)
+        public IActionResult Post([FromBody] ProProjeto Projeto)
         {
             try
             {
-                _Projeto.Cadastro_Projeto(Titulo);
+                _Projeto.Cadastro_Projeto(Projeto);
                 return Ok();
             }
             catch 
@@ -76,17 +77,18 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
-        /// <param name="id">Id do Projeto</param>
-        /// <param name="Titulo">Titulo do Projeto</param>
+        /// <param name="id">Id do Registro</param>
+        /// <param name="Projeto">Titulo do Projeto</param>
         /// <returns>Se o Projeto foi Editado ou não.</returns>
         /// <response code="200">Editado com sucesso.</response>
         /// <response code="500">Falha ao Editar o Projeto.</response>   
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] string Titulo)
+        public IActionResult Put(int id, [FromBody] ProProjeto Projeto)
         {
             try
             {
-                _Projeto.Editar_Projeto(id,Titulo);
+                Projeto.Id = id;
+                _Projeto.Editar_Projeto(Projeto);
                 return Ok();
             }
             catch 
