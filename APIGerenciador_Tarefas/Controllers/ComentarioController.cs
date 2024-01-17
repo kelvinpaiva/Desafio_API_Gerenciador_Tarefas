@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using APIGerenciador_Tarefas.Interface;
 using Microsoft.AspNetCore.Mvc;
+using APIGerenciador_Tarefas.Models.DAO;
 
 namespace APIGerenciador_Tarefas.Controllers
 {
@@ -26,7 +27,7 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <response code="400">Tarefa informada não cadastrada no banco de dados.</response>
         /// <response code="500">Falha ao Cadastrar o Projeto.</response> 
         [HttpPost]
-        public IActionResult Post([FromBody] LctLancamentoComentarioTarefa Comentario)
+        public IActionResult Post([FromBody] Comentario_DAO Comentario)
         {
             try
             {

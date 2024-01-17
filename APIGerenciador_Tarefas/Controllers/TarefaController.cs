@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using APIGerenciador_Tarefas.Interface;
 using APIGerenciador_Tarefas.Models;
+using APIGerenciador_Tarefas.Models.DAO;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -56,7 +57,7 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <response code="400">Projeto com limite de tarefas.</response>
         /// <response code="500">Falha ao Cadastrar a Tarefa.</response>   
         [HttpPost]
-        public IActionResult Post([FromBody] TarTarefa tarefa)
+        public IActionResult Post([FromBody] TarTarefa_DAO tarefa)
         {
             try
             {
@@ -83,23 +84,25 @@ namespace APIGerenciador_Tarefas.Controllers
         ///     }
         ///
         /// </remarks>
+        /// <param name="id">Id da tarefa a ser alterado.</param>
         /// <param name="tarefa">Objeto JSON da Tarefa</param>
         /// <returns>Se o Tarefa foi Editado ou não.</returns>
         /// <response code="200">Editado com sucesso.</response>
         /// <response code="300">Dados inválidos, revise as informações.</response>
         /// <response code="500">Falha ao Editar a Tarefa.</response>   
         [HttpPut("{id}")]
-        public IActionResult Put([FromBody] TarTarefa tarefa)
+        public IActionResult Put(int id,[FromBody] TarTarefa_DAO tarefa)
         {
             try
             {
+                tarefa.Id = id;
                 int retorno = _Tarefa.Editar_Tarefa(tarefa);
                 if (retorno.Equals(2)) return StatusCode(300, new { message = "Dados inválidos, revise as informações." });
                 return Ok();
             }
             catch
             {
-                return StatusCode(500, new { message = "Falha ao Editar o Projeto" });
+                return StatusCode(500, new { message = "Falha ao Editar a Tarefa" });
             }
         }
 
@@ -107,20 +110,21 @@ namespace APIGerenciador_Tarefas.Controllers
         /// Exclui a Tarefa com o ID informado
         /// </summary>
         /// <param name="id">Id da Tarefa</param>
+        /// <param name="id_usuario">Id do usuário excluindo</param>
         /// <returns>Se a Tarefa foi excluída ou não.</returns>
         /// <response code="200">Excluido com sucesso.</response>
         /// <response code="500">Falha ao excluir a Tarefa.</response>   
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public IActionResult Delete(int id, int id_usuario)
         {
             try
             {
-                _Tarefa.Excluir_Tarefa(id);
+                _Tarefa.Excluir_Tarefa(id, id_usuario);
                 return Ok();
             }
             catch
             {
-                return StatusCode(500, new { message = "Falha ao Excluir o Projeto" });
+                return StatusCode(500, new { message = "Falha ao Excluir a Tarefa" });
             }
         }
 
@@ -132,8 +136,7 @@ namespace APIGerenciador_Tarefas.Controllers
         [HttpGet("{tipo_usuario}")]
         public IActionResult Quantidade_Tarefas_Realizadas(int tipo_usuario)
         {
-
-            return Ok();
+            return Ok(_Tarefa.Quantidade_Tarefas_Mensal(tipo_usuario));
         }
     }
 }

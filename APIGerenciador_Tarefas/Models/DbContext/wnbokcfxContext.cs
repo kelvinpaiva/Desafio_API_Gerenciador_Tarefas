@@ -56,13 +56,9 @@ namespace APIGerenciador_Tarefas.Models
 
             modelBuilder.Entity<LctLancamentoComentarioTarefa>(entity =>
             {
-                entity.HasNoKey();
-
                 entity.ToTable("lct_lancamento_comentario_tarefa");
 
-                entity.Property(e => e.Id)
-                    .ValueGeneratedOnAdd()
-                    .HasColumnName("id");
+                entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.IdTar).HasColumnName("id_tar");
 

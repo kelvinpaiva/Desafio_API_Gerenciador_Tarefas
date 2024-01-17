@@ -1,5 +1,6 @@
 ﻿using APIGerenciador_Tarefas.Models;
 using APIGerenciador_Tarefas.Interface;
+using APIGerenciador_Tarefas.Models.DAO;
 
 namespace APIGerenciador_Tarefas.Development
 {
@@ -10,9 +11,13 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="Comentario">Objeto do Comentário</param>
         /// <returns>1 - Cadastrado com Sucesso. 2- Falha no Cadastro. 3 - Comentário incompleto. 4 - Comentário em tarefa inexistente.</returns>
-        public int Cadastra_Comentario_Tarefa(LctLancamentoComentarioTarefa Comentario)
+        public int Cadastra_Comentario_Tarefa(Comentario_DAO Comentario)
         {
-            var valido = Valida_Comentario(Comentario);
+            LctLancamentoComentarioTarefa lancamento = new LctLancamentoComentarioTarefa();
+            lancamento.IdTar = Comentario.IdTar;
+            lancamento.LctComentario = Comentario.LctComentario;
+            lancamento.IdUsuario = Comentario.IdUsuario;
+            var valido = Valida_Comentario(lancamento);
             if (valido.Equals(2)) return 3;//Comentário faltando informação.
             if (valido.Equals(3)) return 4;//Comentário em tarefa inexistente.
 
@@ -21,10 +26,10 @@ namespace APIGerenciador_Tarefas.Development
             {
                 using (var db = new wnbokcfxContext())
                 {
-                    db.LctLancamentoComentarioTarefas.Add(Comentario);
+                    db.LctLancamentoComentarioTarefas.Add(lancamento);
                     db.SaveChanges();
                 }
-                log.Grava_Log_Aplicacao(Comentario, 1);
+                log.Grava_Log_Aplicacao(lancamento, 1);
                 return 1;//Válido
             }
             catch

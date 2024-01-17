@@ -44,7 +44,8 @@ namespace APIGerenciador_Tarefas.Controllers
         ///
         ///     POST /Post
         ///     {
-        ///        "Titulo do Projeto"
+        ///         "proTitulo": "Primeiro Projeto",
+        ///         "idUsuario": 1
         ///     }
         ///
         /// </remarks>
@@ -72,9 +73,10 @@ namespace APIGerenciador_Tarefas.Controllers
         /// <remarks>
         /// Exemplo:
         ///
-        ///     POST /Put
+        ///     POST /Post
         ///     {
-        ///        "Descrição do Projeto"
+        ///         "proTitulo": "Primeiro Projeto",
+        ///         "idUsuario": 1
         ///     }
         ///
         /// </remarks>

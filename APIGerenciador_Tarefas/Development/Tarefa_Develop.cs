@@ -6,12 +6,10 @@ namespace APIGerenciador_Tarefas.Development
 {
     public class Tarefa_Develop : Interface_Tarefa
     {
-        private readonly IConfiguration configuration;
 
 
-        public Tarefa_Develop(IConfiguration _configuration)
+        public Tarefa_Develop()
         {
-            configuration = _configuration;
         }
 
         /// <summary>
@@ -19,19 +17,27 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="tarefa">Objeto da Tarefa</param>
         /// <returns>1 = Cadastrado com sucesso | 2 = Falha na Validação | 3 = Falha ao cadastrar | 4 = Limite de tarefas por Processo atingido. </returns>
-        public int Cadastro_Tarefa(TarTarefa tarefa)
+        public int Cadastro_Tarefa(TarTarefa_DAO tarefa)
         {
             try
             {
-                if (!Valida_Tarefa(tarefa))  return 2;
+                TarTarefa lancamento = new TarTarefa();
+                lancamento.IdPro = tarefa.IdPro;
+                lancamento.IdUsuario = tarefa.IdUsuario;
+                lancamento.TarPrioridade = tarefa.TarPrioridade;
+                lancamento.TarDataValidade = tarefa.TarDataValidade;
+                lancamento.TarDescricao = tarefa.TarDescricao;
+                lancamento.TarTitulo = tarefa.TarTitulo;
+
+                if (!Valida_Tarefa(lancamento))  return 2;
                 if (!Pode_Adicionar_Tarefas((int)tarefa.IdPro!)) return 4;
                 Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
-                   db.TarTarefas.Add(tarefa);
+                   db.TarTarefas.Add(lancamento);
                    db.SaveChanges();
                 }
-                log.Grava_Log_Aplicacao(tarefa, 1);
+                log.Grava_Log_Aplicacao(lancamento, 1);
                 return 1;
             }
             catch
@@ -45,11 +51,20 @@ namespace APIGerenciador_Tarefas.Development
         /// </summary>
         /// <param name="tarefa">Objeto da Tarefa</param>
         /// <returns>True = Editado com sucesso | 2 = Falha na Validação | False = Falha ao Editar</returns>
-        public int Editar_Tarefa(TarTarefa tarefa)
+        public int Editar_Tarefa(TarTarefa_DAO tarefa)
         {
             try
             {
-                if (!Valida_Tarefa(tarefa)) return 2;
+                TarTarefa lancamento = new TarTarefa();
+                lancamento.IdPro = tarefa.IdPro;
+                lancamento.IdUsuario = tarefa.IdUsuario;
+                lancamento.TarPrioridade = tarefa.TarPrioridade;
+                lancamento.TarDataValidade = tarefa.TarDataValidade;
+                lancamento.TarDescricao = tarefa.TarDescricao;
+                lancamento.TarTitulo = tarefa.TarTitulo;
+                lancamento.Id = tarefa.Id;
+
+                if (!Valida_Tarefa(lancamento)) return 2;
                 Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
@@ -61,7 +76,7 @@ namespace APIGerenciador_Tarefas.Development
                     Tar.TarStatus = tarefa.TarStatus;
                     db.SaveChanges();
                 }
-                log.Grava_Log_Aplicacao(tarefa, 2);
+                log.Grava_Log_Aplicacao(lancamento, 2);
                 return 1;
             }
             catch
@@ -74,17 +89,19 @@ namespace APIGerenciador_Tarefas.Development
         /// Exclui Tarefa com o ID informado.
         /// </summary>
         /// <param name="id">Id do Tarefa</param>
+        /// <param name="id_usuario"></param>
         /// <returns>True = Excluído com sucesso | False = Falha ao Excluir</returns>
-        public bool Excluir_Tarefa(int id)
+        public bool Excluir_Tarefa(int id, int id_usuario)
         {
             try
             {
                 Log_Aplicacao_Develop log = new Log_Aplicacao_Develop();
                 using (var db = new wnbokcfxContext())
                 {
-                    var Tarefa = db.TarTarefas.Where(b => b.Id == id);
-                    db.TarTarefas.Remove((TarTarefa)Tarefa);
+                    TarTarefa Tarefa = (TarTarefa)db.TarTarefas.Where(b => b.Id == id);
+                    db.TarTarefas.Remove(Tarefa);
                     db.SaveChanges();
+                    Tarefa.IdUsuario = id_usuario;
                     log.Grava_Log_Aplicacao(Tarefa, 3);
                 }
                 return true;
@@ -147,8 +164,9 @@ namespace APIGerenciador_Tarefas.Development
         /// Função que retorna a quantidade de tarefas realizadas nos últimos 30 dias.
         /// </summary>
         /// <returns>Retorna a quantidade de tarefas. Se der erro retorna -1;</returns>
-        public Object Quantidade_Tarefas_Mensal()
+        public Object Quantidade_Tarefas_Mensal(int tipo_usuario)
         {
+            if (!tipo_usuario.Equals(1)) return "Usuário sem privilégios para acesso!";
             try
             {
                 using (var db = new wnbokcfxContext())
