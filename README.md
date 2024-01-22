@@ -1,5 +1,6 @@
 # Desafio_API_Gerenciador_Tarefas
-Desafio Técnico - Dev .Net Sr. | EclipseWorks
+########################################## Adicionando o DDD no projeto ###############################################
+
 
 ############################################ Explicação simples do Projeto ############################################
 Projeto desenvolvido no Visual Studio 2022. 
